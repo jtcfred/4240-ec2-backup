@@ -14,7 +14,7 @@ PEM_FILE="4240-keypair.pem"  # Update with the path to your PEM file
 TIMESTAMP=$(date "+%Y-%m-%d__%H-%M-%S")
 
 # Create a backup file name with the timestamp
-BACKUP_FILE="$CURRENT_USER-backup-$TIMESTAMP.targ.gz"
+BACKUP_FILE="$CURRENT_USER-backup-$TIMESTAMP.tar.gz"
 
 echo "Please wait. Your directory is being tarred..."
 
