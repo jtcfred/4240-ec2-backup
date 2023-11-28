@@ -2,8 +2,10 @@
 
 # Set the source and destination directories
 CURRENT_USER=$(whoami)
-SOURCE_DIR="$HOME"  # Update with your actual home directory
+SOURCE_DIR="$HOME"
 DEST_USER="ec2-user"
+
+#YOU MUST CHANGE THIS LINE TO THE CURRENT IP ADDRESS FOR THE EC2
 HOST_SERVER="ec2-18-212-119-156.compute-1.amazonaws.com"
 DEST_DIR="."  # Update with your desired backup directory on the destination server
 PEM_FILE="4240-keypair.pem"  # Update with the path to your PEM file
@@ -12,7 +14,7 @@ PEM_FILE="4240-keypair.pem"  # Update with the path to your PEM file
 TIMESTAMP=$(date "+%Y-%m-%d__%H-%M-%S")
 
 # Create a backup file name with the timestamp
-BACKUP_FILE="$CURRENT_USER-backup-$TIMESTAMP"
+BACKUP_FILE="$CURRENT_USER-backup-$TIMESTAMP.tar.gz"
 
 echo "Please wait. Your directory is being tarred..."
 
