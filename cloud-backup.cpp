@@ -11,6 +11,8 @@ void listBackups();
 void getBackup(int number);
 void start();
 void backup();
+void stop();
+bool checkIfUserHasCrontab();
 
 std::unordered_map<std::string, std::string> configValues;
 
@@ -30,8 +32,8 @@ void populateConfigValues()
     // Check if the file is open
     if (!configFile.is_open())
     {
-        std::cerr << "Error: Unable to open the configuration file, or no config exists.." << std::endl;
-        return;
+        std::cerr << "Error: Unable to open the configuration file, or no config exists... Run cloud-backup configure first." << std::endl;
+        exit(1);
     }
 
     // Read the file line by line
@@ -85,6 +87,10 @@ int main(int argc, char *argv[])
     {
         start();
     }
+    else if (command == "stop")
+    {
+        stop();
+    }
     else if (command == "backup")
     {
         backup();
@@ -112,16 +118,56 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+bool checkIfUserHasCrontab()
+{
+    const std::string command = "crontab -l";
+    FILE *pipe = popen(command.c_str(), "r");
+    if (!pipe)
+    {
+        std::cerr << "Error: Unable to execute command" << std::endl;
+        exit(1);
+    }
+
+    char buffer[128];
+    std::string result;
+    while (fgets(buffer, sizeof(buffer), pipe) != nullptr)
+    {
+        result += buffer;
+    }
+    pclose(pipe);
+    if (result.find("no crontab") != std::string::npos)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 void start()
 {
+    bool userHasCronTab = false;
+
     populateConfigValues();
     if (configValues["BACKUP_FREQ"].length() <= 1)
     {
         std::cout << "Error: Backup frequency not set. Set it in ~/.cloud-config.conf." << std::endl;
         return;
     }
-    const std::string cronCommand = "crontab -l | {echo '" + configValues["BACKUP_FREQ"] + " " + configValues["INSTALL_PATH"] + "/backup.sh'} | crontab -";
-    std::cout << cronCommand << std::endl;
+    const std::string cronCommand = "crontab -l | { echo '" + configValues["BACKUP_FREQ"] + " " + configValues["INSTALL_PATH"] + "/backup.sh'; } | crontab -";
+    std::cout << "Starting backup process..." << std::endl;
+    system(cronCommand.c_str());
+    return;
+}
+
+void stop()
+{
+    populateConfigValues();
+    const std::string cronCommand = "crontab -l | grep -v \"" + configValues["INSTALL_PATH"] + "/backup.sh\" | crontab -";
+    std::cout << "Stopping backup process..." << std::endl;
+    system(cronCommand.c_str());
+    return;
 }
 
 void backup()
@@ -130,6 +176,7 @@ void backup()
     const std::string command = configValues["INSTALL_PATH"] + "/backup.sh";
     std::cout << command << std::endl;
     system(command.c_str());
+    return;
 }
 
 void configure()
@@ -186,8 +233,10 @@ void configure()
 
 void listBackups()
 {
-    // Implement listing logic here
+    populateConfigValues();
     std::cout << "Listing available backups...\n";
+    const std::string command = configValues["INSTALL_PATH"] + "/list_backup.sh";
+    std::cout << command << std::endl;
 }
 
 void getBackup(int number)

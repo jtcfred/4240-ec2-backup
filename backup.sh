@@ -12,7 +12,7 @@ BACKUP_FILE="$CURRENT_USER-backup-$TIMESTAMP.tar.gz"
 echo "Please wait. Your directory is being tarred..."
 
 # Archive and compress the home directory
-tar -czvf "$BACKUP_FILE" -C "$SOURCE_DIR" .
+tar -czf "$BACKUP_FILE" -C "$SOURCE_DIR" .
 
 # Use scp to transfer the backup to the destination server
 scp -i "$PEM_FILE" "$BACKUP_FILE" "$DEST_USER@$HOST_SERVER:$DEST_DIR"
