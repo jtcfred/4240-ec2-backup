@@ -1,15 +1,18 @@
-#!/bin/bash
+                           #!/bin/bash
 
-# Specify the directory where the backup files are located
-BACKUP_DIR="$YOUR-DIR"
+# Set the path to the backup file
+BACKUP_FILE="/home/ec2-user/jcozzi-backup-2023-11-28__20-21-45.tar.gz"  # Update>
 
-# Find the latest backup file in the directory
-LATEST_BACKUP=$(find "$BACKUP_DIR" -type f -name "*-backup-*" | sort -r | head >
+# Extract the contents of the backup file to a temporary directory
+TMP_DIR="/tmp/backup_contents"
+mkdir -p "$TMP_DIR"
+tar -xzvf "$BACKUP_FILE" -C "$TMP_DIR"
 
-# Check if a backup file was found
-if [ -n "$LATEST_BACKUP" ]; then
-    echo "Listing files from the backup file: $LATEST_BACKUP"
-    tar -tzf "$LATEST_BACKUP"
-else
-    echo "No backup files found in $BACKUP_DIR"
-fi
+# List the contents of the temporary directory
+echo "Contents of the backup file:"
+ls -l "$TMP_DIR"
+
+# Clean up the temporary directory
+rm -r "$TMP_DIR"
+
+echo "Backup contents listing completed."
