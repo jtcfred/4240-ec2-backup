@@ -1,3 +1,5 @@
+# Run Make command to build
+
 ## Completed
 ```./cloud-backup configure``` - Prompts user for configuration values
 
