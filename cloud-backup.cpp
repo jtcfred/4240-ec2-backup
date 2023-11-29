@@ -13,6 +13,7 @@ void start();
 void backup();
 void stop();
 bool checkIfUserHasCrontab();
+void printHelp();
 
 std::unordered_map<std::string, std::string> configValues;
 
@@ -99,6 +100,10 @@ int main(int argc, char *argv[])
     {
         listBackups();
     }
+    else if (command == "help")
+    {
+        printHelp();
+    }
     else if (command == "get")
     {
         if (argc < 3)
@@ -111,7 +116,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        std::cout << "Unknown command: " << command << "\n";
+        std::cout << "Unknown command: " << command << ". Run \"cloud-backup help\" for a list of available commands \n";
         return 1;
     }
 
@@ -241,6 +246,18 @@ void listBackups()
 
 void getBackup(int number)
 {
-    // Implement logic to retrieve backup based on the provided number
     std::cout << "Retrieving backup " << number << "...\n";
+    const std::string command = configValues["INSTALL_PATH"] + "/retrieve_backup.sh" + std::to_string(number);
+    std::cout << command << std::endl;
+}
+
+void printHelp()
+{
+    std::cout << "cloud-backup - Command Line Tool for Cloud Backups\n\n";
+    std::cout << "Usage:\n";
+    std::cout << "  cloud-backup configure   - Configure the tool\n";
+    std::cout << "  cloud-backup start       - Starts automatic backups\n";
+    std::cout << "  cloud-backup stop        - Stops automatic backups\n";
+    std::cout << "  cloud-backup list        - Lists all backups\n";
+    std::cout << "  cloud-backup get <file>  - Gets a specific backup\n\n";
 }
