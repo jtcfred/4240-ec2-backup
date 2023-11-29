@@ -1,18 +1,11 @@
-                           #!/bin/bash
+#!/bin/bash
 
-# Set the path to the backup file
-BACKUP_FILE="/home/ec2-user/jcozzi-backup-2023-11-28__20-21-45.tar.gz"  # Update>
-
-# Extract the contents of the backup file to a temporary directory
-TMP_DIR="/tmp/backup_contents"
-mkdir -p "$TMP_DIR"
-tar -xzvf "$BACKUP_FILE" -C "$TMP_DIR"
-
-# List the contents of the temporary directory
-echo "Contents of the backup file:"
-ls -l "$TMP_DIR"
-
-# Clean up the temporary directory
-rm -r "$TMP_DIR"
-
-echo "Backup contents listing completed."
+# SSH into your EC2 instance and list backup files
+ssh -i /Users/dhruvipatel/Downloads/4240-ec2-backup-main/4240-keypair.pem ec2-user@ec2-3-85-77-13.compute-1.amazonaws.com << EOF
+  # Specify the directory where your backup files are located on the EC2 instance
+  BACKUP_DIR="/home/ec2-user"  # Update this with the actual path
+  
+  # List the contents of the backup directory
+  echo "Contents of backup directory $BACKUP_DIR:"
+  ls -lh "$BACKUP_DIR"
+EOF
