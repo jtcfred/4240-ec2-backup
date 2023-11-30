@@ -15,5 +15,4 @@ FILENAME="$1"
 # Use scp to download the file from the EC2 instance to the local machine
 scp -i "$PEM_FILE" "$DEST_USER@$HOST_SERVER:$DEST_DIR/$FILENAME" .
 
-# Print a message indicating the successful download
 echo "Download completed: $FILENAME"

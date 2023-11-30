@@ -1,8 +1,6 @@
 #!/bin/bash
-#!/bin/bash
 
 source "$HOME/.cloud-config.conf"
-
 
 # SSH into your EC2 instance and list only tar.gz files in the backup directory
 ssh -i "$PEM_FILE" ec2-user@ec2-54-161-37-214.compute-1.amazonaws.com '
