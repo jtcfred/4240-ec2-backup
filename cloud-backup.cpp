@@ -8,7 +8,7 @@
 
 void configure();
 void listBackups();
-void getBackup(int number);
+void getBackup(const char *);
 void start();
 void backup();
 void stop();
@@ -108,11 +108,10 @@ int main(int argc, char *argv[])
     {
         if (argc < 3)
         {
-            std::cout << "Usage: " << argv[0] << " get <number>\n";
+            std::cout << "Usage: " << argv[0] << " get <fileName>\n";
             return 1;
         }
-        int number = std::stoi(argv[2]);
-        getBackup(number);
+        getBackup(argv[2]);
     }
     else
     {
@@ -241,14 +240,15 @@ void listBackups()
     populateConfigValues();
     std::cout << "Listing available backups...\n";
     const std::string command = configValues["INSTALL_PATH"] + "/list_backup.sh";
-    std::cout << command << std::endl;
+    system(command.c_str());
 }
 
-void getBackup(int number)
+void getBackup(const char *fileName)
 {
-    std::cout << "Retrieving backup " << number << "...\n";
-    const std::string command = configValues["INSTALL_PATH"] + "/retrieve_backup.sh" + std::to_string(number);
-    std::cout << command << std::endl;
+    populateConfigValues();
+    std::cout << "Retrieving backup " << fileName << "...\n";
+    const std::string command = configValues["INSTALL_PATH"] + "/pull_backup.sh " + fileName;
+    system(command.c_str());
 }
 
 void printHelp()
